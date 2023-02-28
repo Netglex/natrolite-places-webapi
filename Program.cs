@@ -10,9 +10,8 @@ public class Program
         var apiSettings = builder.Configuration.GetSection(nameof(ApiSettings)).Get<ApiSettings>()!;
 
         builder.Services.AddSingleton<Random>();
-        builder.Services.AddCors(
-            options =>
-                options.AddDefaultPolicy(policy => policy.WithOrigins(apiSettings.FrontendUrl))
+        builder.Services.AddCors(options =>
+            options.AddDefaultPolicy(policy => policy.WithOrigins(apiSettings.FrontendDomain))
         );
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
@@ -31,7 +30,7 @@ public class Program
         }
         app.UseCors();
         app.UseHttpsRedirection();
-        app.UseAuthorization();
+        // app.UseAuthorization();
         app.MapControllers();
 
         app.Run();
