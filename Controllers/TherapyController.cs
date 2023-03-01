@@ -5,12 +5,12 @@ namespace NatrolitePlacesWebApi.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TestController : ControllerBase
+public class TherapyController : ControllerBase
 {
-    private readonly ILogger<TestController> _logger;
+    private readonly ILogger<TherapyController> _logger;
     private readonly Random _random;
 
-    public TestController(ILogger<TestController> logger, Random random)
+    public TherapyController(ILogger<TherapyController> logger, Random random)
     {
         _logger = logger;
         _random = random;
