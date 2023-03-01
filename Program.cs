@@ -1,4 +1,5 @@
 using NatrolitePlacesWebApi.Configurations;
+using NatrolitePlacesWebApi.Hubs;
 
 namespace NatrolitePlacesWebApi;
 
@@ -10,12 +11,20 @@ public class Program
         var apiSettings = builder.Configuration.GetSection(nameof(ApiSettings)).Get<ApiSettings>()!;
 
         builder.Services.AddSingleton<Random>();
-        builder.Services.AddCors(options =>
-            options.AddDefaultPolicy(policy => policy.WithOrigins(apiSettings.FrontendDomain))
+        builder.Services.AddCors(
+            options =>
+                options.AddDefaultPolicy(
+                    policy =>
+                        policy
+                            .WithOrigins(apiSettings.FrontendDomain)
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                )
         );
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddSignalR();
 
         var app = builder.Build();
 
@@ -30,8 +39,9 @@ public class Program
         }
         app.UseCors();
         app.UseHttpsRedirection();
-        // app.UseAuthorization();
+        app.UseAuthorization();
         app.MapControllers();
+        app.MapHub<MessageHub>(MessageHub.Url);
 
         app.Run();
     }
